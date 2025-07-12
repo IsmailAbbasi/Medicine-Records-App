@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEDIDICNE RECORDS</title>
+    <link rel="stylesheet" href="{% static 'medicine/home.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+
+</head>
+<body class="bg-light">
+    <div class="container py-4">
+    <header class="d-flex justify-content-between  align-items-center mb-4">
+        <h1>Medicine Records</h1>
+            <button class="btn btn-outline-danger">Login with Google</button>
+    </header>
+    <section class="mb-5">
+        <h2 class ="h5 mb-3">Add New Medicine</h2>
+        <form method="post" class="row">
+            {% csrf_token %}
+                <div class="col-md-5">
+                      {{ form.medicine }}
+
+                </div>
+                 <div class="col-md-3">
+                    {{ form.stock }}
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-success w-100">+ Add Medicine</button>
+                </div>
+    
+        </form>
+    </section>
+
+    <section >
+        <h2 class="medicine-list">My Medicine Chest</h2>
+        
+        <div class="mb-3">
+            <input type="text" class="form-control" placeholder="Search for a medicine">
+        </div>
+        
+        {% for med in medicines %}
+        
+     <div class="card mb-2 p-3 d-flex flex-md-row justify-content-between align-items-center" data-id="{{ med.id }}">
+                <div>
+ <strong>{{ med.medicine }}</strong>
+            <span class="badge bg-success ms-2">Stock: {{ med.stock }}</span> 
+                </div>
+                <div class="mt-2 mt-md-0">
+                    <button class="btn btn-outline-warning btn-sm me-2">+</button>
+                    <button class="btn btn-outline-warning btn-sm me-2">-</button>
+                    <button class="btn btn-outline-secondary btn-sm me-2">Out of stock</button>
+                    <button class="btn btn-outline-danger btn-sm">Delete</button>
+                </div>
+            </div>
+             {% empty %}
+    <p class="text-muted">No medicines added yet.</p>
+    </section>
+
+    <section class="mt-4 p-3 ">
+        <p>Are you sure you want to remove this medicine?</p>
+       <div>
+        <button class="btn btn-secondary me-2 cancel-btn">Cancel</button>
+                <button class="btn btn-danger confirm-btn">Confirm</button>
+        </div>
+            {% endfor %}
+
+    </section>
+</body>
+</html>
+
+
+
