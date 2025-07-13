@@ -1,0 +1,17 @@
+allauth==0.0.1
+asgiref==3.9.1
+certifi==2025.7.9
+cffi==1.17.1
+charset-normalizer==3.4.2
+cryptography==45.0.5
+Django==5.2.4
+django-allauth==65.10.0
+fido2==2.0.0
+idna==3.10
+jwt==1.4.0
+psycopg2-binary==2.9.10
+pycparser==2.22
+qrcode==8.2
+requests==2.32.4
+sqlparse==0.5.3
+urllib3==2.5.0
