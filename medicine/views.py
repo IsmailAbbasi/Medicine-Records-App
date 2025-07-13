@@ -1,11 +1,14 @@
 from django.shortcuts import render,redirect
 from .models import Medicine
+from django.contrib.auth.decorators import login_required
+
 
 from .forms import MedForm
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 import json
+@login_required
 
 @csrf_protect
 
@@ -32,6 +35,8 @@ def home(request):
     })
 
 @require_POST
+@login_required
+
 def update_quantity(request):
     
     data = json.loads(request.body)
