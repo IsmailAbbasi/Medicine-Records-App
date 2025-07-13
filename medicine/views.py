@@ -25,10 +25,15 @@ def dashboard(request):
             medicine = form.cleaned_data.get("medicine")
             stock = form.cleaned_data.get("stock")
 
-            Medicine.objects.create(medicine=medicine, stock=stock)
+            Medicine.objects.create(
+                user = request.user,
+                medicine=medicine,
+                stock=stock
+            )
 
             return redirect('dashboard')
-    medicines = Medicine.objects.all().order_by('medicine')
+        
+    medicines = Medicine.objects.filter(user=request.user).order_by('medicine')
 
     return render(request, 'medicine/home.html', {
         'form': form,
