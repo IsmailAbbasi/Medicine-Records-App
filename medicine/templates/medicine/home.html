@@ -38,41 +38,42 @@
             <h2 class="medicine-list">My Medicines</h2>
 
             <div class="mb-3">
-                <input type="text" class="form-control" placeholder="Search for a medicine">
+                <input type="text" class="form-control" id="searchInput"  placeholder="Search for a medicine">
+                <p id="no-results" class="text-danger mt-2" style="display: none;">No results found.</p>
+
             </div>
 
-            {% for med in medicines %}
+            <div id="contentList">
 
-            <div class="card mb-2 p-3 d-flex flex-md-row justify-content-between align-items-center"
-                data-id="{{ med.id }}">
-                <div>
-                    <strong>{{ med.medicine }}</strong>
-                    <span id="quantity-{{ med.id }}" class="badge bg-success ms-2">Stock: {{ med.stock }}</span>
-                </div>
-                    <div class="mt-2 mt-md-0" id="card-{{ med.id }}">
-                        <button class="action-btn btn btn-outline-warning btn-sm me-2" data-product-id="{{ med.id }}"
-                            data-action="increment">+</button>
-                        <button class="action-btn btn btn-outline-warning btn-sm me-2" data-product-id="{{ med.id }}"
-                            data-action="decrement">-</button>
-                        <button class="action-btn btn btn-outline-secondary btn-sm me-2" data-product-id="{{ med.id }}"
-                            data-action="zero">Set to Zero</button>
-                        <button class="action-btn btn btn-outline-danger btn-sm" data-product-id="{{ med.id }}"
-                            data-action="delete">Delete</button>
-                    </div>
+                {% for med in medicines %}
+
+                    <div class="card mb-2 p-3 d-flex flex-md-row justify-content-between align-items-center"
+                        data-id="{{ med.id }}">
+                        <div>
+                            <strong>{{ med.medicine }}</strong>
+                            <span id="quantity-{{ med.id }}" class="badge bg-success ms-2">Stock: {{ med.stock }}</span>
+                        </div>
+                        <div class="mt-2 mt-md-0" id="card-{{ med.id }}">
+                            <button class="action-btn btn btn-outline-warning btn-sm me-2" data-product-id="{{ med.id }}"
+                                data-action="increment">+</button>
+                            <button class="action-btn btn btn-outline-warning btn-sm me-2" data-product-id="{{ med.id }}"
+                                data-action="decrement">-</button>
+                            <button class="action-btn btn btn-outline-secondary btn-sm me-2" data-product-id="{{ med.id }}"
+                                data-action="zero">Set to Zero</button>
+                            <button class="action-btn btn btn-outline-danger btn-sm" data-product-id="{{ med.id }}"
+                                data-action="delete">Delete</button>
+                        </div>
                     </div>
 
                 {% empty %}
                 <p class="text-muted">No medicines added yet.</p>
-        </section>
+                {% endfor %}
 
-        <section class="mt-4 p-3 ">
-            <p>Are you sure you want to remove this medicine?</p>
-            <div>
-                <button class="btn btn-secondary me-2 cancel-btn">Cancel</button>
-                <button class="btn btn-danger confirm-btn">Confirm</button>
             </div>
-            {% endfor %}
         </section>
+        
+    </div>
+
         <script>
             document.querySelectorAll('.action-btn').forEach(button => {
                 button.addEventListener('click', () => {
@@ -98,6 +99,26 @@
                 });
             });
             
+            const searchInput = document.getElementById('searchInput');
+            const contentList = document.getElementById('contentList');
+            const cards = contentList.querySelectorAll('.card');
+            const noResults = document.getElementById('no-results');
+
+            searchInput.addEventListener('keyup', function() {
+            const searchTerm = searchInput.value.toLowerCase();
+            let matchFound = false;
+            for (let i = 0; i < cards.length; i++) {
+                const cardText = cards[i].textContent.toLowerCase(); 
+                if (cardText.includes(searchTerm)) {
+                    matchFound = true;
+                    cards[i].classList.remove("d-none");
+                } else {
+                    cards[i].classList.add("d-none");
+                }
+            }
+            noResults.style.display = matchFound ? 'none' : 'block';
+            });
+
         </script>
 
 </body>
