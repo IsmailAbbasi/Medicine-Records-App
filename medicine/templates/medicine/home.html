@@ -11,16 +11,21 @@
 
 </head>
 
-<form method="post" action="{% url 'account_logout' %}">
-    {% csrf_token %}
-    <button type="submit">Logout</button>
-</form>
-
 <body class="bg-light">
     <div class="container py-4">
         <header class="d-flex justify-content-between  align-items-center mb-4">
             <h1>Medicine Records</h1>
-            <!-- <button class="btn btn-outline-danger">Login with Google</button> -->
+
+  {% if user.is_authenticated %}
+    <div>
+      <span class="me-3 fw-semibold">Welcome, {{ user.first_name }}!</span>
+      <form method="post" action="{% url 'account_logout' %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-danger btn-sm">Logout</button>
+      </form>
+    </div>
+             {% endif %}
+ <!-- <button class="btn btn-outline-danger">Login with Google</button> -->
         </header>
         <section class="mb-5">
             <h2 class="h5 mb-3">Add New Medicine</h2>

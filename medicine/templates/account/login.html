@@ -1,0 +1,48 @@
+{% load static %}
+{% load socialaccount %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign In</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'medicine/home.css' %}">
+  <style>
+    body {
+      background-color: #324364;
+    }
+    .card {
+      border-radius: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+<section class="vh-100 d-flex align-items-center justify-content-center">
+  <div class="container py-5 h-100">
+    <div class="row justify-content-center align-items-center h-100">
+      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="card shadow-lg">
+          <div class="card-body p-5 text-center">
+
+            <h3 class="mb-4">Welcome to MedsApp</h3>
+            <p class="mb-4 text-white">Sign in using Google to continue</p>
+
+            <!-- Google Login -->
+            <a href="{% provider_login_url 'google' %}" class="btn btn-danger w-100 mb-2">
+              Sign in with Google
+            </a>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

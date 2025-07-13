@@ -1,18 +1,20 @@
 from django.shortcuts import render,redirect
 from .models import Medicine
 from django.contrib.auth.decorators import login_required
-
-
 from .forms import MedForm
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 import json
-@login_required
-
-@csrf_protect
 
 def home(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    return redirect('account_login')
+
+@login_required
+@csrf_protect
+def dashboard(request):
     medicine = None
     stock = None
     form = MedForm()
@@ -25,7 +27,7 @@ def home(request):
 
             Medicine.objects.create(medicine=medicine, stock=stock)
 
-            return redirect('home')  
+            return redirect('dashboard')
     medicines = Medicine.objects.all().order_by('medicine')
 
     return render(request, 'medicine/home.html', {
@@ -36,7 +38,6 @@ def home(request):
 
 @require_POST
 @login_required
-
 def update_quantity(request):
     
     data = json.loads(request.body)

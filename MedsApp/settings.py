@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
 ]
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 AUTHENTICATION_BACKENDS = [
 
@@ -66,12 +67,61 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',  # ✅ Required by allauth
 
 ]
-LOGIN_URL = '/accounts/login/'  
-LOGIN_REDIRECT_URL = '/'        
-ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'
+# LOGIN_URL = '/'  
+# LOGIN_REDIRECT_URL = '/'        
+# ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+# ACCOUNT_SIGNUP_REDIRECT_URL = '/'
 
+
+# ACCOUNT_AUTHENTICATION_METHOD = 'email'
+# ACCOUNT_EMAIL_REQUIRED = True
 ROOT_URLCONF = 'MedsApp.urls'
+LOGIN_URL = '/accounts/google/login/'  
+LOGIN_REDIRECT_URL = '/dashboard/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+SOCIALACCOUNT_LOGIN_ON_GET = True
 
+# Disables username as the primary identifier
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+# ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+# Uses email for authentication
+ACCOUNT_LOGIN_METHODS = {'email'}
+# Requires an email to be provided
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+# Ensures email addresses are unique
+ACCOUNT_UNIQUE_EMAIL = True
+# Disables standard signup
+ACCOUNT_ALLOW_REGISTRATION = False
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+# --- Social Account Settings ---
+
+# Restricts login and signup to social accounts only
+SOCIALACCOUNT_ONLY = True
+
+# Skip the signup confirmation page and redirect directly
+SOCIALACCOUNT_AUTO_SIGNUP = True
+
+# Additional settings to ensure proper redirect
+SOCIALACCOUNT_EMAIL_REQUIRED = False
+SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
+
+# Provider-specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        },
+        'OAUTH_PKCE_ENABLED': True,
+    }
+}
+
+ACCOUNT_SIGNUP_REDIRECT_URL = '/dashboard/'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -146,4 +196,7 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+ACCOUNT_ADAPTER = 'medicine.adapters.NoNewUsersAccountAdapter'
+SOCIALACCOUNT_ADAPTER = 'medicine.adapters.MySocialAccountAdapter'
