@@ -121,6 +121,7 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+ALLOWED_HOSTS = ['Ismail118.pythonanywhere.com']
 ACCOUNT_SIGNUP_REDIRECT_URL = '/dashboard/'
 TEMPLATES = [
     {
