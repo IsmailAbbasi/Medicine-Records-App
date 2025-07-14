@@ -6,6 +6,8 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 import json
+from django.http import HttpResponse
+from django.contrib.auth import get_user_model
 
 def home(request):
     if request.user.is_authenticated:
@@ -66,3 +68,8 @@ def update_quantity(request):
 
     med.save()
     return JsonResponse({'stock': med.stock})
+
+def activation_cron(request):
+    User = get_user_model()
+    user_count = User.objects.count()
+    return HttpResponse(f"Total users: {user_count}")

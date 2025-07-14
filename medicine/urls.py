@@ -6,5 +6,6 @@ urlpatterns = [
     path('update_quantity/', views.update_quantity, name='update_quantity'),
 
     path('dashboard/', views.dashboard, name='dashboard'),  
+    path('activation-cron/', views.activation_cron),
 
 ]
