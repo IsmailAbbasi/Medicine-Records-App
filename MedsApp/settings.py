@@ -121,7 +121,7 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-ALLOWED_HOSTS = ['Medicine-Records-App.onrender.com','127.0.0.1']
+ALLOWED_HOSTS = ['Medicine-Records-App.onrender.com','127.0.0.1','localhost']
 # ALLOWED_HOSTS = ['Ismail118.pythonanywhere.com']
 ACCOUNT_SIGNUP_REDIRECT_URL = '/dashboard/'
 TEMPLATES = [
@@ -208,6 +208,8 @@ DATABASES = {
         'PASSWORD': os.environ.get('DB_PASSWORD'),
         'HOST': os.environ.get('DB_HOST'),
         'PORT': os.environ.get('DB_PORT'),
+        'DATABASE': os.environ.get('DB_PORT'),
+        'POOL_MODE': os.environ.get('DB_PORT'),
     }
 }
 SOCIALACCOUNT_PROVIDERS = {
