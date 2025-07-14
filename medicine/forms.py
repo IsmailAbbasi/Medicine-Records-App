@@ -8,8 +8,8 @@ class MedForm(forms.Form):
     )
 
     stock = forms.IntegerField(
-            label="Stock",
-            min_value=0,
-            widget=forms.NumberInput(attrs={"class": "form-control","placeholder": "1","min": 0
-            })
-        )
+        label="Stock",
+        min_value=0,
+        initial=1,
+        widget=forms.NumberInput(attrs={"class": "form-control", "placeholder": "1", "min": 0})
+    )
