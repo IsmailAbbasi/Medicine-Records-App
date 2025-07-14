@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +26,6 @@ SECRET_KEY = 'django-insecure-a+&r6map)s$_m6w)$x!e1as70w03)3k!_a4jvc&#gh43itg+r(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
 
 SITE_ID = 1
 
@@ -120,7 +120,8 @@ SOCIALACCOUNT_PROVIDERS = {
         'OAUTH_PKCE_ENABLED': True,
     }
 }
-ALLOWED_HOSTS = ['Medicine-Records-App.onrender.com']
+
+ALLOWED_HOSTS = ['Medicine-Records-App.onrender.com','127.0.0.1']
 # ALLOWED_HOSTS = ['Ismail118.pythonanywhere.com']
 ACCOUNT_SIGNUP_REDIRECT_URL = '/dashboard/'
 TEMPLATES = [
@@ -152,10 +153,6 @@ WSGI_APPLICATION = 'MedsApp.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3', 
 #     }
 # }
-try:
-    from .settings_local import *
-except ImportError:
-    pass
 
 
 # Password validation
@@ -201,3 +198,29 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ACCOUNT_ADAPTER = 'medicine.adapters.NoNewUsersAccountAdapter'
 SOCIALACCOUNT_ADAPTER = 'medicine.adapters.MySocialAccountAdapter'
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
+    }
+}
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': os.environ.get('GOOGLE_CLIENT_ID'),
+            'secret': os.environ.get('GOOGLE_CLIENT_SECRET'),
+            'key': ''
+        }
+    }
+}
+
+try:
+    from .settings_local import *
+except ImportError:
+    pass
