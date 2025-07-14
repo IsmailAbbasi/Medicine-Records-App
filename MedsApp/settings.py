@@ -120,8 +120,8 @@ SOCIALACCOUNT_PROVIDERS = {
         'OAUTH_PKCE_ENABLED': True,
     }
 }
-
-ALLOWED_HOSTS = ['Ismail118.pythonanywhere.com']
+ALLOWED_HOSTS = ['Medicine-Records-App.onrender.com']
+# ALLOWED_HOSTS = ['Ismail118.pythonanywhere.com']
 ACCOUNT_SIGNUP_REDIRECT_URL = '/dashboard/'
 TEMPLATES = [
     {
