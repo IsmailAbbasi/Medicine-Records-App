@@ -4,120 +4,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEDIDICNE RECORDS</title>
-    <link rel="stylesheet" href="{% static 'medicine/home.css' %}">
+    <title>Medicine Records - Your Personal Health Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="{% static 'medicine/home.css' %}">
 </head>
 
-<body class="bg-light">
-    <div class="container py-4">
-        <header class="d-flex justify-content-between  align-items-center mb-4">
+<body>
+    <div class="container">
+        <header class="d-flex justify-content-between align-items-center">
             <h1>Medicine Records</h1>
 
-  {% if user.is_authenticated %}
-    <div>
-      <span class="me-3 fw-semibold">Welcome, {{ user.first_name }}!</span>
-      <form method="post" action="{% url 'account_logout' %}" style="display:inline;">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-outline-danger btn-sm">Logout</button>
-      </form>
-    </div>
-             {% endif %}
- <!-- <button class="btn btn-outline-danger">Login with Google</button> -->
+            {% if user.is_authenticated %}
+            <div class="user-welcome">
+                <span class="welcome-text">Welcome, {{ user.first_name }}!</span>
+                <form method="post" action="{% url 'account_logout' %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger btn-sm">Logout</button>
+                </form>
+            </div>
+            {% endif %}
         </header>
-        <section class="mb-5">
-            <h2 class="h5 mb-3">Add New Medicine</h2>
-            <form method="post" class="row">
+        <section class="form-section">
+            <h2>Add New Medicine</h2>
+            <form method="post" class="row g-3">
                 {% csrf_token %}
                 <div class="col-md-5">
                     {{ form.medicine }}
-
                 </div>
                 <div class="col-md-3">
                     {{ form.stock }}
                 </div>
                 <div class="col-md-4">
-                    <button type="submit" class="btn btn-success w-100">+ Add Medicine</button>
+                    <button type="submit" class="btn btn-success w-100">Add Medicine</button>
                 </div>
-
             </form>
         </section>
 
-        <section>
+        <section class="medicine-list-section">
             <h2 class="medicine-list">My Medicines</h2>
 
-            <div class="mb-3">
-                <input type="text" class="form-control" id="searchInput"  placeholder="Search for a medicine">
-                <p id="no-results" class="text-danger mt-2" style="display: none;">No results found.</p>
-
+            <div class="search-container">
+                <input type="text" class="form-control" id="searchInput" placeholder="Search for a medicine...">
+                <div id="no-results" class="text-danger mt-2" style="display: none;">No results found.</div>
             </div>
 
             <div id="contentList">
 
                 {% for med in medicines %}
-
-                    <div class="card mb-2 p-3 d-flex flex-md-row justify-content-between align-items-center"
+                    <div class="medicine-card d-flex flex-md-row justify-content-between align-items-center"
                         data-id="{{ med.id }}">
-                        <div>
-                            <strong>{{ med.medicine }}</strong>
-                            <span id="quantity-{{ med.id }}" class="badge bg-success ms-2">Stock: {{ med.stock }}</span>
+                        <div class="medicine-info">
+                            <h3 class="medicine-name">{{ med.medicine }}</h3>
+                            <span id="quantity-{{ med.id }}" class="stock-badge">Stock: {{ med.stock }}</span>
                         </div>
-                        <div class="mt-2 mt-md-0" id="card-{{ med.id }}">
-                            <button class="action-btn btn btn-outline-warning btn-sm me-2" data-product-id="{{ med.id }}"
-                                data-action="increment">+</button>
-                            <button class="action-btn btn btn-outline-warning btn-sm me-2" data-product-id="{{ med.id }}"
-                                data-action="decrement">-</button>
-                            <button class="action-btn btn btn-outline-secondary btn-sm me-2" data-product-id="{{ med.id }}"
-                                data-action="zero">Set to Zero</button>
+                        <div class="action-buttons" id="card-{{ med.id }}">
+                            <button class="action-btn btn btn-outline-warning btn-sm" data-product-id="{{ med.id }}"
+                                data-action="increment" title="Increase stock">+</button>
+                            <button class="action-btn btn btn-outline-warning btn-sm" data-product-id="{{ med.id }}"
+                                data-action="decrement" title="Decrease stock">-</button>
+                            <button class="action-btn btn btn-outline-secondary btn-sm" data-product-id="{{ med.id }}"
+                                data-action="zero" title="Set stock to zero">Reset</button>
                             <button class="action-btn btn btn-outline-danger btn-sm" data-product-id="{{ med.id }}"
-                                data-action="delete">Delete</button>
+                                data-action="delete" title="Delete medicine">Delete</button>
                         </div>
                     </div>
-
                 {% empty %}
-                <p class="text-muted">No medicines added yet.</p>
+                    <div class="empty-state">
+                        <p>No medicines added yet. Add your first medicine above!</p>
+                    </div>
                 {% endfor %}
 
             </div>
         </section>
-        
     </div>
 
-        <script>
-            document.querySelectorAll('.action-btn').forEach(button => {
-                button.addEventListener('click', () => {
-                    const productId = button.dataset.productId;
-                    const action = button.dataset.action;
+    <script>
+        document.querySelectorAll('.action-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const productId = button.dataset.productId;
+                const action = button.dataset.action;
 
-                    fetch('/update_quantity/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                        },
-                        body: JSON.stringify({ product_id: productId, action: action })
-                    })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (action === 'delete') {
-                                document.getElementById(`card-${productId}`).closest('.card').remove();
-                            } else if (data.stock !== undefined) {
-                                document.getElementById(`quantity-${productId}`).innerText = `Stock: ${data.stock}`;
-                            }
-                        });
+                // Add loading state
+                const originalText = button.textContent;
+                button.disabled = true;
+                button.textContent = '...';
+
+                fetch('/update_quantity/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                    },
+                    body: JSON.stringify({ product_id: productId, action: action })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (action === 'delete') {
+                        const card = document.getElementById(`card-${productId}`).closest('.medicine-card');
+                        card.style.transform = 'translateX(-100%)';
+                        card.style.opacity = '0';
+                        setTimeout(() => card.remove(), 300);
+                    } else if (data.stock !== undefined) {
+                        document.getElementById(`quantity-${productId}`).innerText = `Stock: ${data.stock}`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Something went wrong. Please try again.');
+                })
+                .finally(() => {
+                    button.disabled = false;
+                    button.textContent = originalText;
                 });
             });
-            
-            const searchInput = document.getElementById('searchInput');
-            const contentList = document.getElementById('contentList');
-            const cards = contentList.querySelectorAll('.card');
-            const noResults = document.getElementById('no-results');
+        });
+        
+        const searchInput = document.getElementById('searchInput');
+        const contentList = document.getElementById('contentList');
+        const cards = contentList.querySelectorAll('.medicine-card');
+        const noResults = document.getElementById('no-results');
 
-            searchInput.addEventListener('keyup', function() {
-            const searchTerm = searchInput.value.toLowerCase();
+        searchInput.addEventListener('keyup', function() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
             let matchFound = false;
+            
             for (let i = 0; i < cards.length; i++) {
                 const cardText = cards[i].textContent.toLowerCase(); 
                 if (cardText.includes(searchTerm)) {
@@ -127,10 +141,10 @@
                     cards[i].classList.add("d-none");
                 }
             }
-            noResults.style.display = matchFound ? 'none' : 'block';
-            });
-
-        </script>
+            
+            noResults.style.display = matchFound || searchTerm === '' ? 'none' : 'block';
+        });
+    </script>
 
 </body>
 </html>
